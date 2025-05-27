@@ -1,3 +1,4 @@
+using System.Diagnostics.Eventing.Reader;
 using Microsoft.VisualBasic.ApplicationServices;
 
 namespace My_Chess
@@ -16,6 +17,9 @@ namespace My_Chess
             {26,26,26,26,26,26,26,26},
             {25,24,23,22,21,23,24,25},
         };
+        public int currPlayer;
+        public Button prevButton;
+        public bool isMoving=false;
         public Form1()
         {
             InitializeComponent();
@@ -28,6 +32,7 @@ namespace My_Chess
         }
         public void Init()
         {
+            currPlayer = 1;
           CreateMap();
         }
         public void CreateMap()
@@ -54,10 +59,53 @@ namespace My_Chess
                             butt.BackgroundImage = part1;
                             break;
                     }
+                    butt.Click += new EventHandler(OnFigurePress);
                     this.Controls.Add(butt);
+                }
+            }
+        }
+        public void OnFigurePress(object sender, EventArgs e)
+        {
+            if (prevButton != null)
+            
+                prevButton.BackColor = Color.White;
+
+                Button pressedButton = sender as Button;
+            if (map[pressedButton.Location.Y / 50, pressedButton.Location.X / 50] != 0 && map[ pressedButton.Location.Y / 50, pressedButton.Location.X / 50] /10==currPlayer)
+            {
+                pressedButton.BackColor = Color.Red;
+                isMoving = true;
+            }
+            else
+            {
+                if (isMoving)
+                {
+                    int temp = map[pressedButton.Location.Y/50, pressedButton.Location.X/50];
+                     map[pressedButton.Location.Y / 50, pressedButton.Location.X / 50] = map[prevButton.Location.Y / 50, prevButton.Location.X / 50];
+                    map[prevButton.Location.Y / 50, prevButton.Location.X / 50] = temp;
+                    pressedButton.BackgroundImage = prevButton.BackgroundImage;
+                    prevButton.BackgroundImage = null;
+                    isMoving= false;
+                    SwithPlayer();
                 }
 
             }
+            
+                prevButton = pressedButton;
+        }
+        public void SwithPlayer()
+        {
+            if (currPlayer == 1)
+            {
+                currPlayer = 2;
+                
+            }
+            else
+            {
+                currPlayer = 1;
+            }
+
+                   
         }
     }
 }
