@@ -17,6 +17,7 @@ namespace My_Chess
             {26,26,26,26,26,26,26,26},
             {25,24,23,22,21,23,24,25},
         };
+        public Button[,] butts= new Button[8,8];
         public int currPlayer;
         public Button prevButton;
         public bool isMoving=false;
@@ -40,7 +41,9 @@ namespace My_Chess
             for (int y = 0; y < 8; y++)
             {
                 for (int x = 0; x < 8; x++) 
-                { 
+                {
+                    butts[y,x] = new Button();
+
                     Button butt=new Button();
                     butt.Size = new Size(50,50);
                     butt.Location = new Point (y * 50, x * 50);
@@ -61,6 +64,8 @@ namespace My_Chess
                     }
                     butt.Click += new EventHandler(OnFigurePress);
                     this.Controls.Add(butt);
+
+                    butts[y,x] = butt;
                 }
             }
         }
@@ -69,6 +74,8 @@ namespace My_Chess
             if (prevButton != null)
             
                 prevButton.BackColor = Color.White;
+            ActivatorAllButtons();
+            
 
                 Button pressedButton = sender as Button;
             if (map[pressedButton.Location.Y / 50, pressedButton.Location.X / 50] != 0 && map[ pressedButton.Location.Y / 50, pressedButton.Location.X / 50] /10==currPlayer)
@@ -86,6 +93,8 @@ namespace My_Chess
                     pressedButton.BackgroundImage = prevButton.BackgroundImage;
                     prevButton.BackgroundImage = null;
                     isMoving= false;
+                    
+                    ActivatorAllButtons();
                     SwithPlayer();
                 }
 
@@ -98,14 +107,31 @@ namespace My_Chess
             if (currPlayer == 1)
             {
                 currPlayer = 2;
-                
             }
             else
             {
                 currPlayer = 1;
             }
-
-                   
+        }
+        public void ActivatorAllButtons()
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    butts[i, j].Enabled = true;
+                }
+            }
+        }
+        public void DeactivateAllButtons()
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    butts[i, j].Enabled = false;
+                }
+            }
         }
     }
 }
